@@ -1,12 +1,10 @@
 package CRUD;
 
 import CONEXAODB.DB;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class CRUD {
 
@@ -15,8 +13,6 @@ public class CRUD {
     private String valor;
     private String valorAntigo;
     private String valorNovo;
-    private String atributoNovo;
-    private String atributoAntigo;
 
     public String getTabela() {
         return tabela;
@@ -58,139 +54,62 @@ public class CRUD {
         this.valorNovo = valorNovo;
     }
 
-    public String getAtributoNovo() {
-        return atributoNovo;
-    }
+    public void insert(String[] colunas, String[] valores) {
+        String sql = "INSERT INTO " + getTabela() + " (" + String.join(", ", colunas) + ") VALUES (" + String.join(", ", valores).replaceAll("[^,]+", "?") + ")";
 
-    public void setAtributoNovo(String atributoNovo) {
-        this.atributoNovo = atributoNovo;
-    }
+        try (Connection conn = new DB().conectarDB();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-    public String getAtributoAntigo() {
-        return atributoAntigo;
-    }
-
-    public void setAtributoAntigo(String atributoAntigo) {
-        this.atributoAntigo = atributoAntigo;
-    }
-
-    private int opcao;
-    public static boolean ligado = true;
-
-    public int getOpcao() {
-        return opcao;
-    }
-
-    public boolean isLigado() {
-        return ligado;
-    }
-
-    public void desligar() {
-        ligado = false;
-    }
-
-    public void setOpcao(int opcao) {
-        this.opcao = opcao;
-    }
-
-    public void insert(String tabela, String atributo, String valor) {
-        String sql = "INSERT INTO " + getTabela() + " (" + getAtributo() + ") VALUES (?)";
-        Connection conn = null;
-
-        try {
-            conn = new DB().conectarDB(); // Use seu método de conexão
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, valor);
-                stmt.executeUpdate();
-                System.out.println("Registro foi adicionado com sucesso!");
+            for (int i = 0; i < valores.length; i++) {
+                stmt.setString(i + 1, valores[i]);
             }
+
+            stmt.executeUpdate();
+            System.out.println("Registro foi adicionado com sucesso!");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    public void drop(String tabela, int id) {
+    public void update() {
+        String sql = "UPDATE " + getTabela() + " SET " + getAtributo() + " = ? WHERE " + getAtributo() + " = ?";
+        try (Connection conn = new DB().conectarDB();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setString(1, valorNovo);
+            stmt.setString(2, valorAntigo);
+            stmt.executeUpdate();
+            System.out.println("Registro atualizado com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void drop(int id) {
         String sql = "DELETE FROM " + getTabela() + " WHERE id = ?";
-        Connection conn = null;
+        try (Connection conn = new DB().conectarDB();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        try {
-            conn = new DB().conectarDB();
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, id);
-                stmt.executeUpdate();
-                System.out.println("Registro foi removido com sucesso!");
-            }
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            System.out.println("Registro foi removido com sucesso!");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    public void update(String tabela, int id, String atributo, String novoValor) {
-        String sql = "UPDATE " + getTabela() + " SET " + getValorNovo() + " WHERE = " + getValorAntigo();
-        Connection conn = null;
-
-        try {
-            conn = new DB().conectarDB();
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) { // aqui estamos evitando o sql injection
-                stmt.setString(1, novoValor);
-                stmt.setInt(2, id);
-                stmt.executeUpdate();
-                System.out.println("Registro atualizado com sucesso!");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public void select(String tabela) {
+    public void select() {
         String sql = "SELECT * FROM " + getTabela();
-        Connection conn = null;
+        try (Connection conn = new DB().conectarDB();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
-        try {
-            conn = new DB().conectarDB();
-            try (PreparedStatement stmt = conn.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()) {
-
-                while (rs.next()) {
-                    // Supondo que sua tabela tenha uma coluna "id" e "atributo"
-                    System.out.println("ID: " + rs.getInt("id") + ", Atributo: " + rs.getString("atributo"));
-                }
+            while (rs.next()) {
+                // Assumindo que sua tabela tenha uma coluna "id" e "atributo"
+                System.out.println("ID: " + rs.getInt("id") + ", Atributo: " + rs.getString(getAtributo()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
