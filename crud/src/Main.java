@@ -90,7 +90,16 @@ public class Main {
 
                     case 2:
                         // Remover registro
-                        System.out.println("Qual tabela você gostaria de remover informações?");
+                        System.out.println("Qual tabela você gostaria de remover informações?\n");
+                        System.out.println("""
+                                ------ REMOVER ------
+                                QUAL TABELA VOCÊ GOSTARIA DE ADICIONAR INFORMAÇÕES?
+                                1 - CLIENTE
+                                2 - QUARTO
+                                3 - FUNCIONARIO
+                                4 - SERVICO FUNCIONARIO
+                                5 - INFORMACAO RESERVA
+                                """);
                         int idOpcao = ler.nextInt();
                         System.out.println("Qual o ID do valor que você gostaria de remover?");
                         int id = ler.nextInt();
@@ -122,7 +131,16 @@ public class Main {
 
                     case 3:
                         // Editar registro
-                        System.out.println("Qual tabela você gostaria de editar informações?");
+                        System.out.println("Qual tabela você gostaria de editar informações?\n");
+                        System.out.println("""
+                                ------ EDITAR ------
+                                QUAL TABELA VOCÊ GOSTARIA DE ADICIONAR INFORMAÇÕES?
+                                1 - CLIENTE
+                                2 - QUARTO
+                                3 - FUNCIONARIO
+                                4 - SERVICO FUNCIONARIO
+                                5 - INFORMACAO RESERVA
+                                """);
                         int editOpcao = ler.nextInt();
                         System.out.println("Qual o atributo que você gostaria de alterar?");
                         String atributo = ler.next();
@@ -157,7 +175,17 @@ public class Main {
 
                     case 4:
                         // Selecionar registro
-                        System.out.println("Qual tabela você gostaria de selecionar as informações?");
+                        System.out.println("Qual tabela você gostaria de selecionar as informações?\n");
+                        System.out.println("""
+                                ------ SELECIONAR ------
+                                QUAL TABELA VOCÊ GOSTARIA DE ADICIONAR INFORMAÇÕES?
+                                1 - CLIENTE
+                                2 - QUARTO
+                                3 - FUNCIONARIO
+                                4 - CARTÃO ACESSO
+                                5 - SERVICO FUNCIONARIO
+                                6 - INFORMACAO RESERVA
+                                """);
                         int selectOpcao = ler.nextInt();
                         ler.nextLine();
 

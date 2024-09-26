@@ -110,7 +110,30 @@ public class CRUD {
                  ResultSet rs = stmt.executeQuery()) {
 
                 while (rs.next()) {
-                    System.out.println("ID: " + rs.getInt("idcliente") + ", Nome: " + rs.getString("nome"));
+                    switch (tabela) {
+                        case "cliente":
+                            System.out.println("ID: " + rs.getInt("idcliente") + ", Nome: " + rs.getString("nome"));
+                            break;
+                        case "quarto":
+                            System.out.println("ID: " + rs.getInt("idquarto") + ", Numero: " + rs.getInt("numero"));
+                            break;
+                        case "funcionario":
+                            System.out.println("ID: " + rs.getInt("idfuncionario") + ", Nome: " + rs.getString("nome") + ", Cargo: " + rs.getString("cargo"));
+                            break;
+                        case "cartao_acesso":
+                            System.out.println("ID: " + rs.getInt("idcartao") + ", Numero Cartão: " + rs.getString("numero_cartao"));
+                            break;
+                        case "servico_funcionario":
+                            System.out.println("Duração do Serviço: " + rs.getFloat("duracao_servico") + ", Tipo do Serviço: " + rs.getString("tipo_servico"));
+                            break;
+                        case "informacao_reserva":
+                            System.out.println("Data de ínicio: " + rs.getDate("data_inicio_reserva") + ", Data Final: " + rs.getDate("data_fim_reserva"));
+                            break;
+                        default:
+                            System.out.println("Tabela inválida!");
+                            return;
+                    }
+
                 }
             }
         } catch (SQLException e) {
